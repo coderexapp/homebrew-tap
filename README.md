@@ -6,11 +6,13 @@ AI coding agents, reachable from any browser.
 ## Install
 
 ```bash
-brew tap coderexapp/tap
-
-brew install --cask coderex   # the desktop app (macOS, Apple Silicon)
-brew install coderex          # the headless daemon + CLI, no GUI
+brew install --cask coderexapp/tap/coderex   # the desktop app (macOS, Apple Silicon)
+brew install coderexapp/tap/coderex          # the headless daemon + CLI, no GUI
 ```
+
+The full name is intentional — it taps and trusts in a single command. Homebrew
+refuses to load a cask from an untrusted third-party tap, so the shorter
+`brew install --cask coderex` would need three steps (`tap`, `trust`, install).
 
 Both can be installed side by side: the cask gives you `Coderex.app`, the formula
 puts a `coderex` binary on your `PATH`. The app already bundles that same binary,

@@ -13,9 +13,9 @@
 class Coderex < Formula
   desc "Headless daemon and CLI for running and supervising AI coding agents"
   homepage "https://coderex.com"
-  version "0.1.13"
+  version "0.1.14"
   url "https://releases.coderex.com/#{version}/coderex-#{version}-macos-aarch64.tar.gz"
-  sha256 "e90059c6ada9c90e51ee8f71442cdabf3a73149519d5a138d373b6152f1bd21f"
+  sha256 "d6cdab99b09a6abc5f8c8a67c1ca7db14745b1d8c9fe7fb4d441a6672d1b6926"
   license :cannot_represent # proprietary — see the LICENSE in the product
 
   # Apple Silicon only today. Linux (x86_64 + aarch64) lands with Phase 2 of the

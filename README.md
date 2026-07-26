@@ -10,6 +10,9 @@ brew install --cask coderexapp/tap/coderex   # the desktop app (macOS, Apple Sil
 brew install coderexapp/tap/coderex          # the headless daemon + CLI, no GUI
 ```
 
+The **formula** works on macOS (Apple Silicon) and on Linux (x86_64 and arm64).
+The **cask** is macOS-only — there is no Linux GUI yet.
+
 The full name is intentional — it taps and trusts in a single command. Homebrew
 refuses to load a cask from an untrusted third-party tap, so the shorter
 `brew install --cask coderex` would need three steps (`tap`, `trust`, install).
@@ -20,9 +23,9 @@ so you only need the formula if you want the control surface *without* the GUI.
 
 ## On a server?
 
-If you only want the headless daemon — a Mac mini running agents, a CI box, or a
-**Linux server** — the installer is a better fit than Homebrew. It needs no
-package manager and works the same everywhere:
+On a **server**, prefer the installer over Homebrew. Homebrew on Linux installs
+itself into `/home/linuxbrew/.linuxbrew` and most server images don't have it;
+the installer needs no package manager at all and works the same everywhere:
 
 ```bash
 curl -fsSL https://coderex.com/install.sh | sh

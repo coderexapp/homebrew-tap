@@ -1,34 +1,66 @@
 # Headless Coderex: the daemon + CLI, no GUI.
 #
-#   brew install coderex
+#   brew install coderexapp/tap/coderex
 #
 # This is the SAME `coderex` binary that ships inside Coderex.app, published
 # standalone so a server, a CI box, or anyone who just wants the control surface
 # can have it without the desktop app. It pairs with the cask (Casks/coderex.rb),
 # which installs the GUI; the two can be installed together.
 #
-# `version` and `sha256` are rewritten automatically by the `homebrew` job in
-# coderex-client/.github/workflows/release.yml. Keep both at two-space indentation
-# — that job anchors its sed on `^  version ` / `^  sha256 `.
+# macOS (Apple Silicon) and Linux (x86_64 + arm64) are all supported. On a
+# SERVER, prefer the installer — `curl -fsSL https://coderex.com/install.sh | sh`
+# — which needs no package manager. Homebrew on Linux is for workstations that
+# already use it.
+#
+# `version` and every `sha256` are rewritten automatically by the `homebrew` job
+# in coderex-client/.github/workflows/release.yml. That job anchors each checksum
+# on its trailing `# <platform>` comment, so DO NOT remove those comments and do
+# not give two platforms the same marker.
 class Coderex < Formula
   desc "Headless daemon and CLI for running and supervising AI coding agents"
   homepage "https://coderex.com"
   version "0.1.14"
-  url "https://releases.coderex.com/#{version}/coderex-#{version}-macos-aarch64.tar.gz"
-  sha256 "d6cdab99b09a6abc5f8c8a67c1ca7db14745b1d8c9fe7fb4d441a6672d1b6926"
   license :cannot_represent # proprietary — see the LICENSE in the product
 
-  # Apple Silicon only today. Linux (x86_64 + aarch64) lands with Phase 2 of the
-  # multi-platform roadmap, at which point this gains an `on_linux` block.
-  depends_on arch: :arm64
-  depends_on macos: :sonoma # macOS 14+
-
-  # Track releases from the same feed the in-app updater reads, so `brew outdated`
-  # stays correct without a second source of truth.
+  # `livecheck` must precede the on_* blocks (brew audit enforces the ordering).
+  # Tracks the same feed the in-app updater reads, so `brew outdated` stays
+  # correct without a second source of truth. Every platform ships at the same
+  # version from one tag, so reading any one key gives the right answer.
   livecheck do
     url "https://releases.coderex.com/appcast.json"
     strategy :json do |json|
       json.dig("releases", "macos-aarch64", "version")
+    end
+  end
+
+  # `url`/`sha256` cannot sit directly inside `on_macos` — only an arch block may
+  # hold them — so the single macOS build still needs an `on_arm` wrapper.
+  on_macos do
+    depends_on macos: :sonoma # macOS 14+
+    on_arm do
+      url "https://releases.coderex.com/#{version}/coderex-#{version}-macos-aarch64.tar.gz"
+      sha256 "d6cdab99b09a6abc5f8c8a67c1ca7db14745b1d8c9fe7fb4d441a6672d1b6926" # macos-aarch64
+    end
+    # No x86_64 macOS build exists; fail at install with a clear reason rather
+    # than 404 on a URL that was never published.
+    on_intel do
+      odie "Coderex requires Apple Silicon on macOS. Intel Macs are not supported."
+    end
+  end
+
+  on_linux do
+    # The binaries are built on Ubuntu 22.04 and link glibc 2.35, so they run on
+    # Ubuntu 22.04+, Debian 12+, RHEL 9+ and newer — not on Ubuntu 20.04, Debian
+    # 11, RHEL 8, or Amazon Linux 2. Homebrew cannot express a glibc floor, so an
+    # older host fails at exec with "version `GLIBC_2.35' not found" rather than
+    # at install time.
+    on_intel do
+      url "https://releases.coderex.com/#{version}/coderex-#{version}-linux-x86_64.tar.gz"
+      sha256 "fbde76488af6cad1ebd1ec9b000cbfa6854f3aeae77e52107be583cf47feca23" # linux-x86_64
+    end
+    on_arm do
+      url "https://releases.coderex.com/#{version}/coderex-#{version}-linux-aarch64.tar.gz"
+      sha256 "457990507121ef7a87f7c017dc8afc4f7da93a62c9f829043ee651b570077da7" # linux-aarch64
     end
   end
 
@@ -42,8 +74,11 @@ class Coderex < Formula
         coderex serve            # local socket only
         coderex serve --remote   # also join the end-to-end-encrypted relay
 
-      The desktop app is a separate cask:
-        brew install --cask coderex
+      On a machine with no GUI, approve a remote device with:
+        coderex remote pair      # run this BEFORE connecting the browser
+
+      The desktop app is a separate cask (macOS only):
+        brew install --cask coderexapp/tap/coderex
     EOS
   end
 

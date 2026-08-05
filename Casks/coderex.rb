@@ -33,6 +33,12 @@ cask "coderex" do
 
   app "Coderex.app"
 
+  # The CLI ships INSIDE the bundle. Without this stanza nothing put `coderex`
+  # on PATH for a Homebrew install, while the docs said installing the app was
+  # enough. Homebrew symlinks it into its own bin (already on PATH) and removes
+  # it on uninstall, so brew owns this link rather than the app.
+  binary "#{appdir}/Coderex.app/Contents/MacOS/coderex"
+
   # `brew uninstall --zap` removes user state too. Paths verified against
   # coderex_core::persistence::config_dir() and BUNDLE_ID in scripts/bundle.sh.
   zap trash: [

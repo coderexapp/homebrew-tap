@@ -19,7 +19,7 @@
 class Coderex < Formula
   desc "Headless daemon and CLI for running and supervising AI coding agents"
   homepage "https://coderex.com"
-  version "0.3.12"
+  version "0.3.13"
   license :cannot_represent # proprietary — see the LICENSE in the product
 
   # `livecheck` must precede the on_* blocks (brew audit enforces the ordering).
@@ -39,7 +39,7 @@ class Coderex < Formula
     depends_on macos: :sonoma # macOS 14+
     on_arm do
       url "https://releases.coderex.com/#{version}/coderex-#{version}-macos-aarch64.tar.gz"
-      sha256 "9fc4238dada3126b4923819423faec0a2a42118e09426fbb50bff23e78a34940" # macos-aarch64
+      sha256 "95bc3da740e7f04fa5392120ff43473e99da6efab6284e87e900486c59720a26" # macos-aarch64
     end
     # No x86_64 macOS build exists; fail at install with a clear reason rather
     # than 404 on a URL that was never published.
@@ -56,11 +56,11 @@ class Coderex < Formula
     # at install time.
     on_intel do
       url "https://releases.coderex.com/#{version}/coderex-#{version}-linux-x86_64.tar.gz"
-      sha256 "f8ac14d59830d6ac69866574ce2a2e884287a95c11096fdec2076a8aec085706" # linux-x86_64
+      sha256 "eb059d024ce479bb8ac748f7514b558a709747c5596f519ca37508c6894f314a" # linux-x86_64
     end
     on_arm do
       url "https://releases.coderex.com/#{version}/coderex-#{version}-linux-aarch64.tar.gz"
-      sha256 "c48b0a4ed9dd5f290ce614b619a626afdf7fea7bf3ac877a8d93ee072018b6f9" # linux-aarch64
+      sha256 "fedf86385b70966eca19de5dc1d0a75db2236798600ee8bdc331b2af341e6c15" # linux-aarch64
     end
   end
 

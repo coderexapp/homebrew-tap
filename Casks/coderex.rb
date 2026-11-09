@@ -6,8 +6,8 @@
 # coderex-client/.github/workflows/release.yml. Keep both at two-space indentation
 # — that job anchors its sed on `^  version ` / `^  sha256 `.
 cask "coderex" do
-  version "0.4.5"
-  sha256 "d4a6c113d192af9069fdbd8593b92bd132df14d839724901ccf484038b79a4df"
+  version "0.4.6"
+  sha256 "e4cebded1dd911ae3981bd453f0a7a392a015d875736dbcf6cf0128da66a9a18"
 
   # Matches scripts/make-dmg.sh: coderex-<version>-aarch64.dmg, published to the
   # immutable versioned path by the release workflow.
